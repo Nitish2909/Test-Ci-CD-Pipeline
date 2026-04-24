@@ -1,0 +1,39 @@
+# Workflow name (this will appear in GitHub Actions UI)
+name: Node CI/CD 
+
+# Trigger: when this workflow should run
+on:
+  push:
+    branches: [ "main" ]   # Runs when code is pushed to main branch
+
+# Jobs define what tasks will run
+jobs:
+  build:                   # Job name (you can name anything)
+    runs-on: ubuntu-latest # Uses a Linux virtual machine to run tasks
+
+    # Steps are executed one by one
+    steps:
+
+      # Step 1: Get your code from repository
+      - uses: actions/checkout@v3
+      # This downloads your GitHub repo code into the runner
+
+      # Step 2: Install project dependencies
+      - name: Install Dependencies
+        run: npm install
+      # Installs all packages from package.json
+
+      # Step 3: Run tests
+      - name: Run Tests
+        run: npm test
+      # Executes test scripts to check code quality
+
+      # Step 4: Build Docker image
+      - name: Build Docker Image
+        run: docker build -t my-app .
+      # Creates a Docker image named "mycontacts" using Dockerfile
+
+      # Step 5: Deploy step (dummy example)
+      - name: Deploy
+        run: echo "Deploying to server..."
+      # This is just a placeholder (real deployment would use server/cloud)

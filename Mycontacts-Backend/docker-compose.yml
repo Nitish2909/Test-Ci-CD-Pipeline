@@ -1,0 +1,32 @@
+# Defines Docker Compose file format version (v3 is stable & widely used)
+version: "3"
+# Defines all containers (services) that will run together
+services: 
+  backend:    # Service name (your Node.js app)
+    build: . # Build Docker image using Dockerfile inside current folder(Mycontacts-Backend)
+               # WHY: So your app runs inside a container instead of your local machine
+
+    ports:
+      - "3001:3001"    # Maps host port -> container port
+                       # Format: "HOST:CONTAINER"
+                       # WHY: Access app from browser at localhost:3001
+
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/Notes_app 
+                       # Environment variable passed to Node.js app
+                       # mongo = service name (acts like hostname inside Docker network)
+                       # 27017 = MongoDB default port
+                       # Notes_app = database name
+                       # WHY: Backend needs DB connection string to connect MongoDB
+
+    depends_on:
+      - mongo          # Ensures MongoDB container starts before backend
+                       # WHY: Prevent backend from crashing due to DB not ready
+
+  mongo:               # MongoDB service (database container)
+    image: mongo       # Uses official MongoDB image from Docker Hub
+                       # WHY: No need to install MongoDB manually
+
+    ports:
+      - "27017:27017"  # Expose MongoDB port
+                       # WHY: Allows connection from local machine (e.g., MongoDB Compass)
